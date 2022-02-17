@@ -24,7 +24,7 @@ func (ac AuthController) Register(c echo.Context) error {
 	c.Bind(&registerRequest)
 
 	if err := c.Validate(&registerRequest); err != nil {
-		return c.JSON(http.StatusBadRequest, common.ErrorResponse(http.StatusBadRequest, err.Error()))
+		return c.JSON(http.StatusBadRequest, common.NewBadRequestResponse())
 	}
 
 	password, _ := services.Hashpwd(registerRequest.Password)
@@ -48,7 +48,7 @@ func (ac AuthController) Login(c echo.Context) error {
 	c.Bind(&loginRequest)
 
 	if err := c.Validate(&loginRequest); err != nil {
-		return c.JSON(http.StatusBadRequest, common.ErrorResponse(http.StatusBadRequest, err.Error()))
+		return c.JSON(http.StatusBadRequest, common.NewBadRequestResponse())
 	}
 
 	user, err := ac.Repository.Login(loginRequest.Email)
@@ -56,7 +56,7 @@ func (ac AuthController) Login(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, common.ErrorResponse(http.StatusNotFound, "User not found"))
 	}
 
-	ok, err := services.Checkpwd(loginRequest.Password, user.Password)
+	ok, err := services.Checkpwd(user.Password, loginRequest.Password)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, common.ErrorResponse(http.StatusBadRequest, "Wrong password"))
 	}
