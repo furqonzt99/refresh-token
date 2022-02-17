@@ -21,7 +21,7 @@ func NewAuthRepository(db *gorm.DB) *AuthRepository {
 func (ar *AuthRepository) Login(email string) (models.User, error) {
 	var user models.User
 
-	if err := ar.db.First(&user).Error; err != nil {
+	if err := ar.db.First(&user, "email = ?", email).Error; err != nil {
 		return user, err
 	}
 
