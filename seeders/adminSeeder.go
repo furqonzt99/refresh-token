@@ -1,13 +1,13 @@
 package seeders
 
 import (
-	"github.com/furqonzt99/refresh-token/helpers"
 	"github.com/furqonzt99/refresh-token/models"
+	"github.com/furqonzt99/refresh-token/services"
 	"gorm.io/gorm"
 )
 
 func AdminSeeder(db *gorm.DB) {
-	password, _ := helpers.Hashpwd("1234qwer")
+	password, _ := services.Hashpwd("1234qwer")
 
 	admin := models.User{
 		Name:     "Admin",
