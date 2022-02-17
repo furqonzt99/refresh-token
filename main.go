@@ -5,6 +5,7 @@ import (
 	"github.com/furqonzt99/refresh-token/delivery/middlewares"
 	"github.com/furqonzt99/refresh-token/utils"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
@@ -18,6 +19,9 @@ func main() {
 
 	// logging
 	middlewares.LogMiddleware(e)
+
+	// remove trailing slash
+	e.Pre(middleware.RemoveTrailingSlash())
 
 	e.Logger.Fatal(e.Start(":" + config.Port))
 }
