@@ -50,8 +50,8 @@ kubectl apply -f kubernetes.yaml
 
 - Login to okteto cloud dashboard
 
-![Okteto Deployment](https://github.com/furqonzt99/refresh-token/blob/main/main/okteto.png)
+![Okteto Deployment](https://github.com/furqonzt99/refresh-token/blob/main/documentation/okteto.png)
 
 ## Diagram Architecture
 
-![Diagram Architecture](https://github.com/furqonzt99/refresh-token/blob/main/main/diagram.png)
+![Diagram Architecture](https://github.com/furqonzt99/refresh-token/blob/main/documentation/diagram.png)
