@@ -1,11 +1,16 @@
-# build stage
-FROM golang:alpine AS build-env
-RUN apk --no-cache add build-base git bzr mercurial gcc
-ADD . /src
-RUN cd /src && go build -o goapp
+FROM golang:1.17
 
-# final stage
-FROM alpine
+##buat folder APP
+RUN mkdir /app
+
+##set direktori utama
 WORKDIR /app
-COPY --from=build-env /src/goapp /app/
-ENTRYPOINT ./goapp
+
+##copy seluruh file ke app
+ADD . /app
+
+##buat executeable
+RUN go build -o main .
+
+##jalankan executeable
+CMD ["/app/main"]
