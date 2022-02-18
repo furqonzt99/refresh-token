@@ -69,7 +69,39 @@ func (ac AuthController) Login(c echo.Context) error {
 		refreshToken, _ = services.CreateRefreshToken(accessToken)
 	}
 
-	response := LoginResponse{
+	response := TokenResponse{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}
+
+	return c.JSON(http.StatusOK, common.SuccessResponse(response))
+}
+
+func (ac AuthController) Refresh(c echo.Context) error {
+	var refreshRequest RefreshTokenRequest
+
+	c.Bind(&refreshRequest)
+
+	if err := c.Validate(&refreshRequest); err != nil {
+		return c.JSON(http.StatusBadRequest, common.NewBadRequestResponse())
+	}
+
+	// validate refresh token
+	user, err := services.ValidateRefreshToken(refreshRequest.RefreshToken)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, common.NewUnauthorizeResponse())
+	}
+
+	// get data from db with validated email from token
+	userDB, err := ac.Repository.Login(user.Email)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, common.ErrorResponse(http.StatusNotFound, "User not found"))
+	}
+
+	accessToken, _ := services.CreateAccessToken(userDB.ID, userDB.Email, userDB.Role)
+	refreshToken, _ := services.CreateRefreshToken(accessToken)
+
+	response := TokenResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}
