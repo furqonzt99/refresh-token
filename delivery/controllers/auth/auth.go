@@ -34,12 +34,19 @@ func (ac AuthController) Register(c echo.Context) error {
 		Password: password,
 	}
 
-	_, err := ac.Repository.Register(user)
+	userDB, err := ac.Repository.Register(user)
 	if err != nil {
 		return c.JSON(http.StatusNotAcceptable, common.ErrorResponse(http.StatusNotAcceptable, "Email already exist"))
 	}
 
-	return c.JSON(http.StatusOK, common.NewSuccessOperationResponse())
+	response := RegisterResponse{
+		ID:    userDB.ID,
+		Name:  userDB.Name,
+		Email: userDB.Email,
+		Role:  userDB.Role,
+	}
+
+	return c.JSON(http.StatusOK, common.SuccessResponse(response))
 }
 
 func (ac AuthController) Login(c echo.Context) error {
