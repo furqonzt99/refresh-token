@@ -38,4 +38,5 @@ require (
 	github.com/valyala/fasttemplate v1.2.1 // indirect
 	golang.org/x/sys v0.0.0-20211103235746-7861aae1554b // indirect
 	gorm.io/driver/mysql v1.2.3
+	gorm.io/plugin/soft_delete v1.0.5
 )
