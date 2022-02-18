@@ -22,14 +22,10 @@ func InitDB(config *config.AppConfig) *gorm.DB {
 }
 
 func InitialMigrate(db *gorm.DB) {
-	if config.Mode == "development" {
-		db.Migrator().DropTable(&models.User{})
 
-		db.AutoMigrate(&models.User{})
+	db.Migrator().DropTable(&models.User{})
 
-		seeders.AdminSeeder(db)
-	} else {
-		db.AutoMigrate(&models.User{})
-	}
+	db.AutoMigrate(&models.User{})
 
+	seeders.AdminSeeder(db)
 }

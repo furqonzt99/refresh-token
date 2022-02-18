@@ -23,7 +23,6 @@ type AppConfig struct {
 
 var lock = &sync.Mutex{}
 var appConfig *AppConfig
-var Mode string
 
 func GetConfig() *AppConfig {
 	lock.Lock()
@@ -56,7 +55,8 @@ func initConfig() *AppConfig {
 	constants.JWT_ACCESS_KEY = os.Getenv("JWT_ACCESS_KEY")
 	constants.JWT_REFRESH_KEY = os.Getenv("JWT_REFRESH_KEY")
 
-	Mode = os.Getenv("MODE")
+	constants.ADMIN_EMAIL = os.Getenv("ADMIN_EMAIL")
+	constants.ADMIN_PASSWORD = os.Getenv("ADMIN_PASSWORD")
 
 	return &defaultConfig
 }
