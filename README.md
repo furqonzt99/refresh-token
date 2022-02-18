@@ -6,6 +6,7 @@ CRUD User + Refresh Token Implementation
 
 - Username : admin@admin.com
 - Password : 1234qwer
+- Note : Access token will be expired in 1 minute & Refresh token will be expired in 60 days
 
 ## API Documentation
 
