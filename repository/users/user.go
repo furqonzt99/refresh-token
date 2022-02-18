@@ -8,9 +8,9 @@ import (
 type UserInterface interface {
 	Create(user models.User) (models.User, error)
 	ReadAll() ([]models.User, error)
-	ReadOne(id int) (models.User, error)
-	Update(id int, updateUser models.User) (models.User, error)
-	Delete(id int) (models.User, error)
+	ReadOne(id string) (models.User, error)
+	Update(id string, updateUser models.User) (models.User, error)
+	Delete(id string) (models.User, error)
 }
 
 type UserRepository struct {
@@ -21,6 +21,14 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db: db}
 }
 
+func (ur *UserRepository) Create(user models.User) (models.User, error) {
+	if err := ur.db.Create(&user).Error; err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
 func (ur *UserRepository) ReadAll() ([]models.User, error) {
 	var users []models.User
 
@@ -29,20 +37,20 @@ func (ur *UserRepository) ReadAll() ([]models.User, error) {
 	return users, nil
 }
 
-func (ur *UserRepository) ReadOne(id int) (models.User, error) {
+func (ur *UserRepository) ReadOne(id string) (models.User, error) {
 	var user models.User
 
-	if err := ur.db.First(&user, id).Error; err != nil {
+	if err := ur.db.First(&user, "id = ?", id).Error; err != nil {
 		return user, err
 	}
 
 	return user, nil
 }
 
-func (ur *UserRepository) Update(id int, updateUser models.User) (models.User, error) {
+func (ur *UserRepository) Update(id string, updateUser models.User) (models.User, error) {
 	var user models.User
 
-	if err := ur.db.First(&user, id).Error; err != nil {
+	if err := ur.db.First(&user, "id = ?", id).Error; err != nil {
 		return user, err
 	}
 
@@ -51,10 +59,10 @@ func (ur *UserRepository) Update(id int, updateUser models.User) (models.User, e
 	return updateUser, nil
 }
 
-func (ur *UserRepository) Delete(id int) (models.User, error) {
+func (ur *UserRepository) Delete(id string) (models.User, error) {
 	var user models.User
 
-	if err := ur.db.First(&user, id).Error; err != nil {
+	if err := ur.db.First(&user, "id = ?", id).Error; err != nil {
 		return user, err
 	}
 
