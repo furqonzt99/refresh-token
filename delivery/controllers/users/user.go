@@ -34,12 +34,19 @@ func (uc UserController) Create(c echo.Context) error {
 		Password: password,
 	}
 
-	_, err := uc.Repository.Create(user)
+	userDB, err := uc.Repository.Create(user)
 	if err != nil {
 		return c.JSON(http.StatusNotAcceptable, common.ErrorResponse(http.StatusNotAcceptable, "Email already exist"))
 	}
 
-	return c.JSON(http.StatusOK, common.NewSuccessOperationResponse())
+	response := UserResponse{
+		ID:    userDB.ID,
+		Name:  userDB.Name,
+		Email: userDB.Email,
+		Role:  userDB.Role,
+	}
+
+	return c.JSON(http.StatusOK, common.SuccessResponse(response))
 }
 
 func (uc UserController) ReadAll(c echo.Context) error {
@@ -51,6 +58,7 @@ func (uc UserController) ReadAll(c echo.Context) error {
 			ID:    user.ID,
 			Name:  user.Name,
 			Email: user.Email,
+			Role:  user.Role,
 		})
 	}
 
@@ -69,6 +77,7 @@ func (uc UserController) ReadOne(c echo.Context) error {
 		ID:    user.ID,
 		Name:  user.Name,
 		Email: user.Email,
+		Role:  user.Role,
 	}
 
 	return c.JSON(http.StatusOK, common.SuccessResponse(response))
