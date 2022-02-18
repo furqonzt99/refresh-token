@@ -27,7 +27,7 @@ func ErrorResponse(code int, message string) DefaultResponse {
 	}
 }
 
-//NewInternalServerErrorResponse default internal server error response
+//NewSuccessOperationResponse default success operation response
 func NewSuccessOperationResponse() DefaultResponse {
 	return DefaultResponse{
 		200,
@@ -59,7 +59,7 @@ func NewStatusNotAcceptable() DefaultResponse {
 	}
 }
 
-//NewNotFoundResponse default not found error response
+//NewUnauthorize default Unauthorize response
 func NewUnauthorizeResponse() DefaultResponse {
 	return DefaultResponse{
 		401,
