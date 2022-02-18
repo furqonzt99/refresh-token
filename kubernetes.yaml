@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: refreshtoken-env-config
+data:
+  APP_PORT: '1326'
+  DB_DRIVER: mysql
+  DB_HOST: ***.***.***.***.amazonaws.com
+  DB_PORT: '3306'
+  DB_USERNAME: root
+  DB_PASSWORD: root
+  DB_NAME: refreshtoken
+  JWT_ACCESS_KEY: kskhjeq02klasjlk
+  JWT_REFRESH_KEY: hzsduaddshkj87a
+  ADMIN_EMAIL: admin@admin.com
+  ADMIN_PASSWORD: '1234qwer'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: refreshtoken-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: refreshtoken
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: refreshtoken
+    spec:
+      containers:
+        - name: refreshtoken
+          image: furqonzt99/refreshtoken:latest
+          ports:
+            - containerPort: 1326
+          envFrom:
+            - configMapRef:
+                name: refreshtoken-env-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: refreshtoken-appservices
+  annotations:
+    dev.okteto.com/auto-ingress: 'true'
+spec:
+  type: ClusterIP
+  ports:
+    - name: 'refreshtoken'
+      port: 8080
+      targetPort: 1326
+  selector:
+    app: refreshtoken
