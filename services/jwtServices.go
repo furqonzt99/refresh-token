@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/furqonzt99/refresh-token/constants"
@@ -24,7 +23,6 @@ func CreateAccessToken(userId string, email, role string) (string, error) {
 
 func ExtractAccessToken(e echo.Context) (models.Payload, error) {
 	user := e.Get("user").(*jwt.Token)
-	fmt.Println(user)
 	if user.Valid {
 		claims := user.Claims.(jwt.MapClaims)
 		userId := claims["userId"]
@@ -55,23 +53,25 @@ func ValidateRefreshToken(refreshToken string) (models.Payload, error) {
 		return []byte(constants.JWT_REFRESH_KEY), nil
 	})
 
-	// get Payload from Old Access Token
-	accToken := oldRefreshToken.Claims.(jwt.MapClaims)["accessToken"].(string)
-	oldAccessToken, _ := jwt.Parse(accToken, func(oldAccessToken *jwt.Token) (interface{}, error) {
-		return []byte(constants.JWT_ACCESS_KEY), nil
-	})
+	if oldRefreshToken.Valid {
+		// get Payload from Old Access Token
+		accToken := oldRefreshToken.Claims.(jwt.MapClaims)["accessToken"].(string)
+		oldAccessToken, _ := jwt.Parse(accToken, func(oldAccessToken *jwt.Token) (interface{}, error) {
+			return []byte(constants.JWT_ACCESS_KEY), nil
+		})
 
-	claims := oldAccessToken.Claims.(jwt.MapClaims)
+		claims := oldAccessToken.Claims.(jwt.MapClaims)
 
-	if claims["email"].(string) != "" {
-		userId := claims["userId"]
-		email := claims["email"]
-		role := claims["role"]
-		return models.Payload{
-			UserID: userId.(string),
-			Email:  email.(string),
-			Role:   role.(string),
-		}, nil
+		if claims["email"].(string) != "" {
+			userId := claims["userId"]
+			email := claims["email"]
+			role := claims["role"]
+			return models.Payload{
+				UserID: userId.(string),
+				Email:  email.(string),
+				Role:   role.(string),
+			}, nil
+		}
 	}
 
 	return models.Payload{}, errors.New("invalid token")
